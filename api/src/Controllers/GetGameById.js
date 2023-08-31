@@ -1,5 +1,6 @@
 const axios = require('axios');
 const {Videogame, Genres} = require('../db');
+require('dotenv').config();
 const {API_KEY_GERO} = process.env
 
 const getGameByid = async(req, res) => {

@@ -1,13 +1,28 @@
 const axios = require('axios');
 const { Videogame, Genres} = require("../db");
-const {API_KEY_GERO} = process.env
+const {API_KEY_GERO} = process.env;
+const size = 25;
 
 
 
-const getVideogames = async (req, res) => {
+module.exports = async () => {
     
     try {
-        const dataBaseVideogame = await Videogame.findAll({
+        const page1 = (await axios.get(`https://api.rawg.io/api/games?page_size=${size}&page=1&key=${API_KEY_GERO}`)).data.results;
+        const page2 = (await axios.get(`https://api.rawg.io/api/games?page_size=${size}&page=2&key=${API_KEY_GERO}`)).data.results;
+        const page3 = (await axios.get(`https://api.rawg.io/api/games?page_size=${size}&page=3&key=${API_KEY_GERO}`)).data.results;
+        const page4 = (await axios.get(`https://api.rawg.io/api/games?page_size=${size}&page=4&key=${API_KEY_GERO}`)).data.results;
+        
+        const ApiGames = [...page1, ...page2, ...page3, ...page4].map( videogame => {
+            return{
+            id: videogame.id,
+            Name: videogame.name,
+            Image: videogame.background_image,
+            genres: videogame.genres.map(genre => {return { name: genre.name}})
+            }
+        })
+
+        const DbGames = await Videogame.findAll({
             include: [
                 {
                 model: Genres,
@@ -17,37 +32,11 @@ const getVideogames = async (req, res) => {
             ]
         })
 
-        const dbVG = dataBaseVideogame.map(vg => {
-            const genres = vg.genres.map(gen => gen.name)
-            return {
-                genres: genres,
-                id: vg.id,
-                name: vg.name,
-                platform: vg.platform,
-                FechaDeLanzamiento: vg.released,
-                raiting: vg.raiting,
-                image: vg.image,
-                description: vg.description,
-                created: vg.created
-            }
-        })
-
-        const { data } = (await axios.get(`https://api.rawg.io/api/games?key=${API_KEY_GERO}&limit=100`))
-        const apiVG = await data.results.map( videogame => ({
-            id: videogame.id,
-            Name: videogame.name,
-            Image: videogame.background_image,
-            Plataformas: videogame.platforms.map(platform => platform.platform.name),
-            FechaDeLanzamiento: videogame.released,
-            Raiting: videogame.raiting,
-            genres: videogame.genres.map(genre => genre.name)
-        }));
-        return [...apiVG, ...dbVG]
-
+        return [...DbGames, ...ApiGames]
     
     } catch (error) {
-        return res.status(400).json({error: error.message})
+
+        throw new Error({error: error.message})
+
     }
 }
-
-module.exports = {getVideogames}

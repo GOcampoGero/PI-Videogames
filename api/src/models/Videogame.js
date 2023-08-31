@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     FechaDeLanzaminto: {
-      type: DataTypes.DATEONLY,
+      type: DataTypes.STRING,
       allowNull: false
     },
     Raiting:{
