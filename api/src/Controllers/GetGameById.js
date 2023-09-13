@@ -20,7 +20,7 @@ const getGameByid = async(req, res) => {
                 FechaDeLanzamiento: data.released,
                 platform: data.platforms.map(platform => platform.platform.name),
                 genres: data.genres.map(genre => genre.name),
-                raiting: data.raiting,
+                rating: data.rating,
                 image: data.image,
                 description: data.description,
                 created: false

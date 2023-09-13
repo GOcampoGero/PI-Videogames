@@ -5,8 +5,9 @@ const size = 25;
 
 
 
-module.exports = async () => {
-    
+const getVideogames = async (req, res) => {
+    const {name} = req.query
+
     try {
         const page1 = (await axios.get(`https://api.rawg.io/api/games?page_size=${size}&page=1&key=${API_KEY_GERO}`)).data.results;
         const page2 = (await axios.get(`https://api.rawg.io/api/games?page_size=${size}&page=2&key=${API_KEY_GERO}`)).data.results;
@@ -18,7 +19,9 @@ module.exports = async () => {
             id: videogame.id,
             Name: videogame.name,
             Image: videogame.background_image,
-            genres: videogame.genres.map(genre => {return { name: genre.name}})
+            genres: videogame.genres.map(genre => genre.name),
+            rating: videogame.rating,
+            created: false
             }
         })
 
@@ -32,11 +35,23 @@ module.exports = async () => {
             ]
         })
 
-        return [...DbGames, ...ApiGames]
+        const allVideogames = [...DbGames, ...ApiGames]
+
+        if (name) {
+            const gamesbyName = allVideogames.filter(
+                game => game.Name.toLowerCase().includes(name.toLowerCase()))
+
+            return res.status(201).json(gamesbyName.slice(0,15))
+        }
+        else{
+            return res.status(200).json(allVideogames)
+        }
     
     } catch (error) {
 
-        throw new Error({error: error.message})
+        return res.status(400).json({error: error.message})
 
     }
 }
+
+module.exports = {getVideogames}

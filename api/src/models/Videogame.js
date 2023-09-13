@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    Raiting:{
+    Rating:{
       type: DataTypes.DECIMAL
     }, 
     created: {

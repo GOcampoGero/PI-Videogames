@@ -1,12 +1,13 @@
 import {useDispatch, useSelector} from 'react-redux';
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import { getVideogames } from "../../Redux/Actions";
 import Paginado from '../../components/Paginado/Paginado';
 import Games from "../../components/Games/Games"
+import SearchBar from '../../components/SearchBar/SearchBar';
 
 const Home = () => {
     const dispatch = useDispatch();
-    const videogames = useSelector((state) => state.allVideogames)
+    const videogames = useSelector((state) => state.filterVideogames)
     const [currentPage, setCurrentPage] = useState(1);
     const videogamesPerPage = 15;
 
@@ -21,8 +22,10 @@ const Home = () => {
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber)
     }
+
     return (
         <div>
+            <SearchBar setCurrentPage={setCurrentPage}/>
             <Games videogames={currentVideogames}/>
             <Paginado
             currentPage = {currentPage}
