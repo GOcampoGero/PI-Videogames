@@ -21,7 +21,7 @@ const getGameByid = async(req, res) => {
                 platform: data.platforms.map(platform => platform.platform.name),
                 genres: data.genres.map(genre => genre.name),
                 rating: data.rating,
-                image: data.image,
+                image: data.background_image,
                 description: data.description,
                 created: false
             }
@@ -40,16 +40,16 @@ const getGameByid = async(req, res) => {
             })
 
             if(!bdVideogame) throw new Error ('ID no encontrada')
-
+            console.log(bdVideogame)
             const bdGame = {
-                id: bdGame.id,
-                name: bdGame.name,
-                FechaDeLanzamiento: bdGame.released,
-                platform: bdGame.platforms.map(platform => platform.platform.name),
-                genres: bdGame.genres.map(genre => genre.name),
-                raiting: bdGame.raiting,
-                image: bdGame.image,
-                description: bdGame.description,
+                id: bdVideogame.id,
+                name: bdVideogame.Name,
+                FechaDeLanzamiento: bdVideogame.FechaDeLanzamiento,
+                platform: bdVideogame.Platforms,
+                
+                rating: bdVideogame.Rating,
+                image: bdVideogame.Image,
+                description: bdVideogame.Description
             }
             
             res.status(200).json(bdGame)

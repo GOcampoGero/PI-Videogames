@@ -19,6 +19,7 @@ const getVideogames = async (req, res) => {
             id: videogame.id,
             Name: videogame.name,
             Image: videogame.background_image,
+            Platforms: videogame.platforms.map(pl => pl.platform.name),
             genres: videogame.genres.map(genre => genre.name),
             rating: videogame.rating,
             created: false
@@ -34,7 +35,7 @@ const getVideogames = async (req, res) => {
                 },
             ]
         })
-
+        
         const allVideogames = [...DbGames, ...ApiGames]
 
         if (name) {

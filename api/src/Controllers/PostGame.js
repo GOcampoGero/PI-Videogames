@@ -1,24 +1,27 @@
 const { Videogame, Genres } = require('../db');
 
 const postGame = async(req, res) => {
-    const { name, Description, Plataformas, Imagen, FechaDeLanzaminto, Raiting, Genero} = req.body;
+    const { Name, Description, Platforms, Image, FechaDeLanzamiento, Rating, genres} = req.body;
     try {        
         const newGame = await Videogame.create({
-                name,
-                Description,
-                Plataformas,
-                Imagen,
-                FechaDeLanzaminto,
-                Raiting
+                Name: Name,
+                Description: Description,
+                Platforms: Platforms,
+                Image: Image,
+                FechaDeLanzamiento: FechaDeLanzamiento,
+                Rating: Rating,
+                created: true
         });
-        Genero.forEach(async (gn) => {
-            let generosBd = await Genres.findAll({
+        genres.forEach(async (gn) => {
+            let GenerosBd = await Genres.findAll({
                 where: {
                     Name: gn
                 }
-            })
-            await newGame.addGenres(generosBd)
+            }
+            )
+            await newGame.addGenres(GenerosBd)
         });
+
         res.status(201).json(newGame)
     } catch (error) {
         res.status(400).json({error: error.message})
